@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 17%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 17%;
+  --primary: 91 26% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 24 43% 53%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 89 47% 92%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 33 41% 65%;
+  --accent-foreground: 0 0% 17%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 91 26% 48%;
+  --radius: 0.625rem;
+
+  --primary-color: #7c9d5c;
+  --secondary-color: #c17c4b;
+  --accent-color: #d4a574;
+  --dark-green: #4a5d3c;
+  --light-green: #e8f0dc;
+  --cream: #f5f1e8;
+  --brown: #6b4423;
+  --text-dark: #2c2c2c;
+  --text-light: #666666;
+  --white: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --background: 0 0% 14.5%;
+  --foreground: 0 0% 98.5%;
+  --card: 0 0% 14.5%;
+  --card-foreground: 0 0% 98.5%;
+  --popover: 0 0% 14.5%;
+  --popover-foreground: 0 0% 98.5%;
+  --primary: 0 0% 98.5%;
+  --primary-foreground: 0 0% 20.5%;
+  --secondary: 0 0% 26.9%;
+  --secondary-foreground: 0 0% 98.5%;
+  --muted: 0 0% 26.9%;
+  --muted-foreground: 0 0% 70.8%;
+  --accent: 0 0% 26.9%;
+  --accent-foreground: 0 0% 98.5%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98.5%;
+  --border: 0 0% 26.9%;
+  --input: 0 0% 26.9%;
+  --ring: 0 0% 43.9%;
+}
+
+@layer base {
+  * {
+    /* Removed problematic @apply border-border and used standard CSS reset */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    @apply font-sans leading-relaxed;
+    /* Using CSS variables directly instead of @apply with arbitrary values */
+    color: var(--text-dark);
+    background-color: var(--cream);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif mb-4;
+    color: var(--dark-green);
+  }
+
+  h1 {
+    @apply text-[2.5rem];
+  }
+
+  h2 {
+    @apply text-[2rem];
+  }
+
+  h3 {
+    @apply text-[1.5rem];
+  }
+
+  p {
+    @apply mb-4;
+    color: var(--text-light);
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-[1200px] mx-auto px-5;
+  }
+
+  .btn {
+    @apply inline-block px-8 py-3 rounded-full no-underline transition-all duration-300 text-base border-none cursor-pointer font-serif;
+  }
+
+  .btn-primary {
+    background-color: var(--secondary-color);
+    color: var(--white);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--brown);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+  }
+
+  .btn-secondary {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+  }
+
+  .btn-large {
+    @apply px-12 py-4 text-lg;
+  }
+
+  .section-title {
+    @apply text-center text-[2.5rem] mb-4;
+    color: var(--dark-green);
+  }
+
+  .section-subtitle {
+    @apply text-center text-xl mb-12;
+    color: var(--text-light);
+  }
+}
