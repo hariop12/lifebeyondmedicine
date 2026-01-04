@@ -1,4 +1,4 @@
-import { getUser, getUserById } from "./models/db";
+import { getUser, getUserById } from "./db";
 
 export interface User {
   id: string;

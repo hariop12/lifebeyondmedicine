@@ -1,23 +1,19 @@
-import connectDB from "../mongodb";
-import User, { type IUser } from "./User";
-import Booking, { type IBooking } from "./Booking";
-import Content, { type IContent } from "./Content";
-import Inquiry, { type IInquiry } from "./Inquiry";
-
-// Initialize database connection
-export async function initDatabase() {
-  await connectDB();
-  console.log("Database initialized");
-}
+import connectDB from "./mongodb";
+import { getUserModel, type IUser } from "./models/User";
+import { getBookingModel, type IBooking } from "./models/Booking";
+import { getContentModel, type IContent } from "./models/Content";
+import { getInquiryModel, type IInquiry } from "./models/Inquiry";
 
 // User functions
 export async function getUser(username: string): Promise<IUser | null> {
   await connectDB();
+  const User = await getUserModel();
   return await User.findOne({ username });
 }
 
 export async function getUserById(id: string): Promise<IUser | null> {
   await connectDB();
+  const User = await getUserModel();
   return await User.findById(id);
 }
 
@@ -29,6 +25,7 @@ export async function createUser(userData: {
   role?: string;
 }): Promise<IUser> {
   await connectDB();
+  const User = await getUserModel();
   const user = new User(userData);
   await user.save();
   return user;
@@ -37,6 +34,7 @@ export async function createUser(userData: {
 // Booking functions
 export async function getBookings(): Promise<IBooking[]> {
   await connectDB();
+  const Booking = await getBookingModel();
   return await Booking.find().sort({ createdAt: -1 });
 }
 
@@ -51,6 +49,7 @@ export async function createBooking(bookingData: {
   status?: string;
 }): Promise<IBooking> {
   await connectDB();
+  const Booking = await getBookingModel();
   const booking = new Booking(bookingData);
   await booking.save();
   return booking;
@@ -61,11 +60,13 @@ export async function updateBooking(
   updates: Partial<IBooking>
 ): Promise<IBooking | null> {
   await connectDB();
+  const Booking = await getBookingModel();
   return await Booking.findByIdAndUpdate(id, updates, { new: true });
 }
 
 export async function deleteBooking(id: string): Promise<boolean> {
   await connectDB();
+  const Booking = await getBookingModel();
   const result = await Booking.findByIdAndDelete(id);
   return !!result;
 }
@@ -73,6 +74,7 @@ export async function deleteBooking(id: string): Promise<boolean> {
 // Content functions
 export async function getContent(page?: string): Promise<IContent[]> {
   await connectDB();
+  const Content = await getContentModel();
   if (page) {
     return await Content.find({ page }).sort({ section: 1, content_key: 1 });
   }
@@ -86,6 +88,7 @@ export async function updateContent(
   value: string
 ): Promise<IContent> {
   await connectDB();
+  const Content = await getContentModel();
   const content = await Content.findOneAndUpdate(
     { page, section, content_key: key },
     { page, section, content_key: key, content_value: value },
@@ -97,6 +100,7 @@ export async function updateContent(
 // Inquiry functions
 export async function getInquiries(): Promise<IInquiry[]> {
   await connectDB();
+  const Inquiry = await getInquiryModel();
   return await Inquiry.find().sort({ createdAt: -1 });
 }
 
@@ -107,6 +111,7 @@ export async function createInquiry(inquiryData: {
   message: string;
 }): Promise<IInquiry> {
   await connectDB();
+  const Inquiry = await getInquiryModel();
   const inquiry = new Inquiry(inquiryData);
   await inquiry.save();
   return inquiry;
@@ -117,11 +122,13 @@ export async function updateInquiryStatus(
   status: string
 ): Promise<IInquiry | null> {
   await connectDB();
+  const Inquiry = await getInquiryModel();
   return await Inquiry.findByIdAndUpdate(id, { status }, { new: true });
 }
 
 export async function deleteInquiry(id: string): Promise<boolean> {
   await connectDB();
+  const Inquiry = await getInquiryModel();
   const result = await Inquiry.findByIdAndDelete(id);
   return !!result;
 }
@@ -129,6 +136,8 @@ export async function deleteInquiry(id: string): Promise<boolean> {
 // Stats function for dashboard
 export async function getStats() {
   await connectDB();
+  const Booking = await getBookingModel();
+  const Inquiry = await getInquiryModel();
 
   const [
     totalBookings,
@@ -159,4 +168,8 @@ export async function getStats() {
     unreadInquiries,
     todayBookings,
   };
+}
+
+export async function initDatabase() {
+  await connectDB();
 }

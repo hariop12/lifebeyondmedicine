@@ -5,7 +5,7 @@ import {
   createBooking,
   updateBooking,
   deleteBooking,
-} from "@/lib/models/db";
+} from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 

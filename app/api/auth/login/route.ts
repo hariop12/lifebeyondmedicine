@@ -23,7 +23,9 @@ export async function POST(request: NextRequest) {
     const user = await authenticateUser(username, password);
 
     if (!user) {
-      console.log("[v0] Authentication failed for username:", username);
+      console.log(
+        "[v0] Authentication failed - user not found or password incorrect"
+      );
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
@@ -40,11 +42,12 @@ export async function POST(request: NextRequest) {
       token,
     });
   } catch (error) {
-    console.error("[v0] Login error:", error);
+    console.error("[v0] Login error details:", error);
     return NextResponse.json(
       {
         error: "Login failed",
         details: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined,
       },
       { status: 500 }
     );

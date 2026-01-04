@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
-import User from "../lib/models/User";
+import getUserModel from "../lib/models/User";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/life-beyond-medicine";
+
 async function seedAdmin() {
   try {
     console.log("Connecting to MongoDB...");
     await mongoose.connect(MONGODB_URI);
     console.log("✅ Connected to MongoDB");
+
+    const User = await getUserModel();
 
     // Check if admin already exists
     const existingAdmin = await User.findOne({ username: "admin" });
