@@ -1,51 +1,49 @@
-import mongoose from "mongoose";
-import getUserModel from "../lib/models/User";
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/life-beyond-medicine";
+const MONGO_URI =
+  "mongodb+srv://mnc4umnc_db_user:rHXfJcT4wLCCFJsf@lifebeyondmedicine.6jk7ma2.mongodb.net/";
 
-async function seedAdmin() {
+const adminSchema = new mongoose.Schema(
+  {
+    username: String,
+    email: String,
+    name: String,
+    password: String,
+    role: String,
+  },
+  { timestamps: true }
+);
+
+const Admin = mongoose.model("Admin", adminSchema);
+
+(async function () {
   try {
-    console.log("Connecting to MongoDB...");
-    await mongoose.connect(MONGODB_URI);
-    console.log("✅ Connected to MongoDB");
+    await mongoose.connect(MONGO_URI);
+    console.log("MongoDB connected");
 
-    const User = await getUserModel();
-
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ username: "admin" });
-
-    if (existingAdmin) {
-      console.log("⚠️  Admin user already exists");
-      console.log("Username: admin");
-      await mongoose.connection.close();
+    const exists = await Admin.findOne({
+      email: "admin@lifebeyondmedicine.com",
+    });
+    if (exists) {
+      console.log("Admin already exists");
       process.exit(0);
     }
 
-    // Create default admin
-    const admin = new User({
+    const hash = await bcrypt.hash("admin123", 10);
+
+    await Admin.create({
       username: "admin",
-      password: "admin123",
       email: "admin@lifebeyondmedicine.com",
       name: "Administrator",
+      password: hash,
       role: "admin",
     });
 
-    await admin.save();
-    console.log("✅ Default admin created successfully");
-    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log("Username: admin");
-    console.log("Password: admin123");
-    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log("⚠️  Please change the password after first login");
-
-    await mongoose.connection.close();
+    console.log("Admin created successfully");
     process.exit(0);
-  } catch (error) {
-    console.error("❌ Error seeding admin:", error);
-    await mongoose.connection.close();
+  } catch (err) {
+    console.error(err);
     process.exit(1);
   }
-}
-
-seedAdmin();
+})();
